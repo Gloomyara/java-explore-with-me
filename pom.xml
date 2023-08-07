@@ -12,7 +12,6 @@
 
 	<modules>
 		<module>stats-lib</module>
-		<module>stats-server</module>
         <module>ewm-service</module>
     </modules>
 

@@ -24,18 +24,18 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<ViewStats> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris) {
         if (uris.isEmpty()) {
-            return statsRepository.findALlViewStats(start, end);
+            return statsRepository.findAllViewStats(start, end);
         } else {
-            return statsRepository.findALlViewStats(start, end, uris);
+            return statsRepository.findAllViewStats(start, end, uris);
         }
     }
 
     @Override
     public List<ViewStats> getUniqueViewStats(LocalDateTime start, LocalDateTime end, List<String> uris) {
         if (uris.isEmpty()) {
-            return statsRepository.findALlUniqueViewStats(start, end);
+            return statsRepository.findAllUniqueViewStats(start, end);
         } else {
-            return statsRepository.findALlUniqueViewStats(start, end, uris);
+            return statsRepository.findAllUniqueViewStats(start, end, uris);
         }
     }
 

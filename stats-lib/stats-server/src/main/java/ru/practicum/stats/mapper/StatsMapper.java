@@ -1,12 +1,13 @@
 package ru.practicum.stats.mapper;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.dto.EndpointHit;
 import ru.practicum.stats.model.Stats;
 
-
+@UtilityClass
 public class StatsMapper {
 
-    public static Stats toEntity(EndpointHit endpointHit) {
+    public Stats toEntity(EndpointHit endpointHit) {
         if (endpointHit == null) {
             return null;
         }
@@ -20,7 +21,7 @@ public class StatsMapper {
         return stats;
     }
 
-    public static EndpointHit toDto(Stats stats) {
+    public EndpointHit toDto(Stats stats) {
         if (stats == null) {
             return null;
         }

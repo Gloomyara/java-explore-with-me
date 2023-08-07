@@ -21,28 +21,28 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
     @Query(uniqueStatsJql +
             "group by s.app, s.uri " +
             "order by count(DISTINCT s.ip) DESC ")
-    List<ViewStats> findALlUniqueViewStats(LocalDateTime start,
+    List<ViewStats> findAllUniqueViewStats(LocalDateTime start,
                                            LocalDateTime end);
 
     @Query(uniqueStatsJql +
             "and s.uri in (:uris) " +
             "group by s.app, s.uri " +
             "order by count(DISTINCT s.ip) DESC ")
-    List<ViewStats> findALlUniqueViewStats(LocalDateTime start,
+    List<ViewStats> findAllUniqueViewStats(LocalDateTime start,
                                            LocalDateTime end,
                                            List<String> uris);
 
     @Query(statsJql +
             "group by s.app, s.uri " +
             "order by count(s) DESC ")
-    List<ViewStats> findALlViewStats(LocalDateTime start,
+    List<ViewStats> findAllViewStats(LocalDateTime start,
                                      LocalDateTime end);
 
     @Query(statsJql +
             "and s.uri in (:uris) " +
             "group by s.app, s.uri " +
             "order by count(s) DESC ")
-    List<ViewStats> findALlViewStats(LocalDateTime start,
+    List<ViewStats> findAllViewStats(LocalDateTime start,
                                      LocalDateTime end,
                                      List<String> uris);
 }
