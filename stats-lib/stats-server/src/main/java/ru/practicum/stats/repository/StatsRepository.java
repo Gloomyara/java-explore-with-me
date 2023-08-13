@@ -10,36 +10,20 @@ import java.util.List;
 
 public interface StatsRepository extends JpaRepository<Stats, Long> {
 
-    String uniqueStatsJql = "select new ru.practicum.dto.ViewStats(s.app, s.uri, count(DISTINCT s.ip)) " +
+    @Query("select new ru.practicum.dto.ViewStats(s.app, s.uri, count(DISTINCT s.ip)) " +
             "from Stats s " +
-            "where s.timestamp BETWEEN :start and :end ";
-
-    String statsJql = "select new ru.practicum.dto.ViewStats(s.app, s.uri, count(s)) " +
-            "from Stats s " +
-            "where s.timestamp BETWEEN :start and :end ";
-
-    @Query(uniqueStatsJql +
-            "group by s.app, s.uri " +
-            "order by count(DISTINCT s.ip) DESC ")
-    List<ViewStats> findAllUniqueViewStats(LocalDateTime start,
-                                           LocalDateTime end);
-
-    @Query(uniqueStatsJql +
-            "and s.uri in (:uris) " +
+            "where s.timestamp BETWEEN :start and :end " +
+            "and ((:uris) is NULL or s.uri IN (:uris)) " +
             "group by s.app, s.uri " +
             "order by count(DISTINCT s.ip) DESC ")
     List<ViewStats> findAllUniqueViewStats(LocalDateTime start,
                                            LocalDateTime end,
                                            List<String> uris);
 
-    @Query(statsJql +
-            "group by s.app, s.uri " +
-            "order by count(s) DESC ")
-    List<ViewStats> findAllViewStats(LocalDateTime start,
-                                     LocalDateTime end);
-
-    @Query(statsJql +
-            "and s.uri in (:uris) " +
+    @Query("select new ru.practicum.dto.ViewStats(s.app, s.uri, count(s)) " +
+            "from Stats s " +
+            "where s.timestamp BETWEEN :start and :end " +
+            "and ((:uris) is NULL or s.uri IN (:uris)) " +
             "group by s.app, s.uri " +
             "order by count(s) DESC ")
     List<ViewStats> findAllViewStats(LocalDateTime start,

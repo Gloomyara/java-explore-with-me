@@ -24,7 +24,7 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<ViewStats> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris) {
         if (uris.isEmpty()) {
-            return statsRepository.findAllViewStats(start, end);
+            return statsRepository.findAllViewStats(start, end, null);
         } else {
             return statsRepository.findAllViewStats(start, end, uris);
         }
@@ -33,7 +33,7 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<ViewStats> getUniqueViewStats(LocalDateTime start, LocalDateTime end, List<String> uris) {
         if (uris.isEmpty()) {
-            return statsRepository.findAllUniqueViewStats(start, end);
+            return statsRepository.findAllUniqueViewStats(start, end, null);
         } else {
             return statsRepository.findAllUniqueViewStats(start, end, uris);
         }

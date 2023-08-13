@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static ru.practicum.dto.UtilConstants.*;
+import static ru.practicum.constants.UtilConstants.*;
 
 @Slf4j
 public class StatsClient {

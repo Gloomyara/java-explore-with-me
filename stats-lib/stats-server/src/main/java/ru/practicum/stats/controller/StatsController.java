@@ -7,17 +7,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.dto.EndpointHit;
 import ru.practicum.dto.ViewStats;
+import ru.practicum.stats.util.exception.NegativeTimeRangeException;
 import ru.practicum.stats.service.StatsService;
-import ru.practicum.stats.exception.NegativeTimeRangeException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.dto.UtilConstants.*;
+import static ru.practicum.constants.UtilConstants.*;
 
 @Slf4j
 @Validated
@@ -43,7 +46,9 @@ public class StatsController {
     @PostMapping(HIT_PATH)
     public ResponseEntity<EndpointHit> post(@Valid @RequestBody EndpointHit endpointHit) {
         log.info("Received POST {} request, dto: {}.", HIT_PATH, endpointHit);
-        return new ResponseEntity<>(statsService.saveHit(endpointHit), HttpStatus.CREATED);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(statsService.saveHit(endpointHit));
     }
 
     private void validateTimeRange(LocalDateTime start, LocalDateTime end) {
