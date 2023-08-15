@@ -3,7 +3,7 @@ package ru.practicum.request.model;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.practicum.event.model.Event;
-import ru.practicum.request.enums.Status;
+import ru.practicum.request.dto.EventRequestStatusUpdateDto.Status;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
@@ -23,7 +23,7 @@ public class Request {
     private Long id;
     private LocalDateTime created;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @ToString.Exclude
     private Event event;
 

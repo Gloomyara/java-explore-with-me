@@ -2,10 +2,14 @@ package ru.practicum.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.event.dto.AdminEventUpdateDto;
 import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.dto.customconstraint.EventDateConstraint;
+import ru.practicum.event.dto.customconstraint.PositiveTimeRange;
 import ru.practicum.event.dto.query.EventAdminQuery;
 import ru.practicum.event.service.EventService;
 
@@ -18,28 +22,29 @@ import static ru.practicum.constants.UtilConstants.*;
 
 @Slf4j
 @Validated
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping(ADMIN_PATH + EVENT_PATH)
 public class EventAdminController {
 
     private final EventService eventService;
     private final String path = ADMIN_PATH + EVENT_PATH;
+    private final String limitHours = ADMIN_TIME_RANGE_LIMIT;
 
     @GetMapping
-    public List<EventFullDto> getEvents(
-            EventAdminQuery query,
+    public ResponseEntity<List<EventFullDto>> getEvents(
+            @PositiveTimeRange EventAdminQuery query,
             @RequestParam(defaultValue = FROM) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = SIZE) @Positive Integer size) {
         log.info("Received GET {} request, from: {}, size: {}.", path, from, size);
-        return eventService.getEventsAdmin(query, from, size);
+        return ResponseEntity.ok(eventService.getEventsAdmin(query, from, size));
     }
 
     @PatchMapping(EVENT_ID_VAR)
-    public EventFullDto updateEvent(
+    public ResponseEntity<EventFullDto> updateEvent(
             @PathVariable @Positive Long eventId,
-            @Valid @RequestBody EventUpdateDto dto) {
+            @Valid @EventDateConstraint(limitHours) @RequestBody AdminEventUpdateDto dto) {
         log.info("Received PATCH {}/{} request, dto: {}.", path, eventId, dto);
-        return eventService.updateEventAdmin(eventId, dto);
+        return ResponseEntity.ok(eventService.updateEventAdmin(eventId, dto));
     }
 }

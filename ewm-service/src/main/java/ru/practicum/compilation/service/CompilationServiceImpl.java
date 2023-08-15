@@ -9,22 +9,27 @@ import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.reposiotry.CompilationRepository;
 import ru.practicum.event.repository.EventRepository;
-import ru.practicum.util.exception.compilation.CompilationNotFoundException;
+import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.pagerequest.PageRequester;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+
+import static ru.practicum.constants.UtilConstants.COMPILATION;
 
 @Service
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
+    private final CompilationMapper mapper = CompilationMapper.INSTANCE;
 
     @Override
     public CompilationDto saveNewCompilationAdmin(NewCompilationsDto dto) {
         return toDto(compilationRepository.save(Compilation.builder()
-                .events(eventRepository.findEventsByIdIn(dto.getEvents()))
+                .events(dto.getEvents().isEmpty() ? new HashSet<>()
+                        : eventRepository.findEventsByIdIn(dto.getEvents()))
                 .pinned(dto.isPinned())
                 .title(dto.getTitle())
                 .build()));
@@ -34,7 +39,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto updateCompilationAdmin(Long compId, UpdateCompilationDto dto) {
         Compilation comp = findCompilation(compId);
         if (Objects.nonNull(dto.getEventsIds())) {
-            comp.setEvents(eventRepository.findAllById(dto.getEventsIds()));
+            comp.setEvents(new HashSet<>((eventRepository.findAllById(dto.getEventsIds()))));
         }
         update(dto, comp);
         return toDto(compilationRepository.save(comp));
@@ -46,7 +51,11 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public List<CompilationDto> getCompilationsPublic(boolean pinned, Integer from, Integer size) {
+    public List<CompilationDto> getCompilationsPublic(Boolean pinned, Integer from, Integer size) {
+        if (pinned == null) {
+            return toDto(compilationRepository.findAll(new PageRequester(from, size)).toList());
+
+        }
         return toDto(compilationRepository.findAllByPinned(pinned, new PageRequester(from, size)).toList());
     }
 
@@ -57,18 +66,18 @@ public class CompilationServiceImpl implements CompilationService {
 
     private Compilation findCompilation(Long compId) {
         return compilationRepository.findById(compId)
-                .orElseThrow(() -> new CompilationNotFoundException(compId));
+                .orElseThrow(() -> new EntityNotFoundException(COMPILATION, compId));
     }
 
     private void update(UpdateCompilationDto dto, Compilation compilation) {
-        CompilationMapper.INSTANCE.update(dto, compilation);
+        mapper.update(dto, compilation);
     }
 
     private CompilationDto toDto(Compilation compilation) {
-        return CompilationMapper.INSTANCE.toDto(compilation);
+        return mapper.toDto(compilation);
     }
 
     private List<CompilationDto> toDto(List<Compilation> compilation) {
-        return CompilationMapper.INSTANCE.toDto(compilation);
+        return mapper.toDto(compilation);
     }
 }

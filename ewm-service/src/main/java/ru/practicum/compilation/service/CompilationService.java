@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CompilationService {
 
-    List<CompilationDto> getCompilationsPublic(boolean pinned, Integer from, Integer size);
+    List<CompilationDto> getCompilationsPublic(Boolean pinned, Integer from, Integer size);
 
     CompilationDto getCompilationPublic(Long compId);
 

@@ -16,8 +16,10 @@ import java.util.List;
 public interface EventMapper {
     EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
-    Event toEntity(NewEventDto newEventDto);
+    @Mapping(target = "location", source = "dto.location")
+    Event toEntity(NewEventDto dto);
 
+    @Mapping(target = "location", source = "event.location")
     EventFullDto toDto(Event event);
 
     List<EventFullDto> toDto(List<Event> event);

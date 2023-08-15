@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.event.model.Location;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -15,7 +15,7 @@ import static ru.practicum.constants.UtilConstants.DATE_TIME_PATTERN;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewEventDto {
+public class NewEventDto implements EventDtoIn {
     @NotBlank
     @Size(min = 3, max = 120)
     private String title;
@@ -34,15 +34,15 @@ public class NewEventDto {
     private String description;
 
     @NotNull
-    @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
 
     @NotNull
-    private Location location;
-
-    private int participantLimit;
-    private boolean paid;
+    @Valid
+    private LocationDto location;
+    @PositiveOrZero
+    private long participantLimit = 0L;
+    private boolean paid = false;
     private boolean requestModeration = true;
 
 }

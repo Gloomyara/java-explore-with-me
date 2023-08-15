@@ -5,8 +5,8 @@ import org.hibernate.Hibernate;
 import ru.practicum.event.model.Event;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,7 +27,7 @@ public class Compilation {
             inverseJoinColumns = @JoinColumn(name = "events_id")
     )
     @ToString.Exclude
-    private List<Event> events;
+    private Set<Event> events;
 
     private boolean pinned;
     private String title;

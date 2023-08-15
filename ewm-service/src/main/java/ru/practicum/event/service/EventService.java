@@ -1,9 +1,6 @@
 package ru.practicum.event.service;
 
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.NewEventDto;
-import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.dto.*;
 import ru.practicum.event.dto.query.EventAdminQuery;
 import ru.practicum.event.dto.query.EventPublicQuery;
 
@@ -23,10 +20,10 @@ public interface EventService {
 
     EventFullDto updateEventPrivate(Long userId,
                                     Long eventId,
-                                    EventUpdateDto eventUpdateDto);
+                                    UserEventUpdateDto eventUpdateDto);
 
     EventFullDto updateEventAdmin(Long eventId,
-                                  EventUpdateDto eventUpdateDto);
+                                  AdminEventUpdateDto eventUpdateDto);
 
     List<EventShortDto> getShortEventsPublic(EventPublicQuery eventPublicQuery,
                                              Integer from,

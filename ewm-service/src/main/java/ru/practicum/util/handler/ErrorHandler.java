@@ -9,16 +9,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.util.exception.category.CategoryNotFoundException;
+import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.exception.event.EventConstraintException;
-import ru.practicum.util.exception.event.EventNotFoundException;
-import ru.practicum.util.exception.event.EventPublicQueryException;
 import ru.practicum.util.exception.request.ConfirmationNotRequiredException;
 import ru.practicum.util.exception.request.RequestConstraintException;
 import ru.practicum.util.exception.user.UserAccessException;
-import ru.practicum.util.exception.user.UserNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -55,7 +53,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({
-            EventPublicQueryException.class,
+            ConstraintViolationException.class,
             ConfirmationNotRequiredException.class,
             UserAccessException.class
     })
@@ -65,11 +63,7 @@ public class ErrorHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({
-            CategoryNotFoundException.class,
-            UserNotFoundException.class,
-            EventNotFoundException.class
-    })
+    @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(HttpServletRequest request,
                                                         final RuntimeException e) {
         return buildErrorResponse(request,
@@ -81,6 +75,7 @@ public class ErrorHandler {
     @ExceptionHandler({
             DataIntegrityViolationException.class,
             EventConstraintException.class,
+            IllegalArgumentException.class,
             RequestConstraintException.class
     })
     public ResponseEntity<ErrorResponse> handleConflict(HttpServletRequest request,

@@ -10,16 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.NewEventDto;
-import ru.practicum.event.dto.EventUpdateDto;
+import ru.practicum.event.dto.UserEventUpdateDto;
+import ru.practicum.event.dto.customconstraint.EventDateConstraint;
 import ru.practicum.event.service.EventService;
-import ru.practicum.util.exception.event.EventConstraintException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import static ru.practicum.constants.UtilConstants.*;
 
@@ -30,6 +28,7 @@ import static ru.practicum.constants.UtilConstants.*;
 @RequestMapping(USERS_PATH)
 public class EventPrivateController {
     private final EventService eventService;
+    private final String limitHours = USER_TIME_RANGE_LIMIT;
 
     @GetMapping(USERS_ID_VAR + EVENT_PATH)
     public ResponseEntity<List<EventShortDto>> getShortEvents(
@@ -53,10 +52,9 @@ public class EventPrivateController {
     @PostMapping(USERS_ID_VAR + EVENT_PATH)
     public ResponseEntity<EventFullDto> saveNewEvent(
             @PathVariable @Positive Long userId,
-            @Valid @RequestBody NewEventDto dto) {
+            @Valid @EventDateConstraint(limitHours) @RequestBody NewEventDto dto) {
         log.info("Received POST {}/{}{} request, dto: {}.",
                 USERS_PATH, userId, EVENT_PATH, dto);
-        eventDateUserConstraintCheck(dto.getEventDate());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(eventService.saveNewEventPrivate(userId, dto));
@@ -66,20 +64,9 @@ public class EventPrivateController {
     public ResponseEntity<EventFullDto> updateEvent(
             @PathVariable @Positive Long userId,
             @PathVariable @Positive Long eventId,
-            @Valid @RequestBody EventUpdateDto dto) {
-        if (Objects.nonNull(dto.getEventDate())) {
-            eventDateUserConstraintCheck(dto.getEventDate());
-        }
+            @Valid @EventDateConstraint(limitHours) @RequestBody UserEventUpdateDto dto) {
         log.info("Received PATCH {}/{}{}/{} request, dto: {}.",
                 USERS_PATH, userId, EVENT_PATH, eventId, dto);
         return ResponseEntity.ok(eventService.updateEventPrivate(userId, eventId, dto));
-    }
-
-    private void eventDateUserConstraintCheck(LocalDateTime eventDate) {
-        if (!eventDate.isAfter(LocalDateTime.now().plusHours(USER_TIME_RANGE_LIMIT))) {
-            throw new EventConstraintException(
-                    String.format("Error! EventDate must be at least %d hours after the current time.",
-                            USER_TIME_RANGE_LIMIT));
-        }
     }
 }

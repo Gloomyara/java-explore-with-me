@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS event
     lon                double precision            NOT NULL,
     paid               boolean                     NOT NULL,
     participant_limit  integer                     NOT NULL,
-    confirmed_requests integer                     NOT NULL,
     request_moderation boolean                     NOT NULL,
     title              varchar(120)                NOT NULL,
     state              varchar(32)                 NOT NULL,
@@ -70,5 +69,6 @@ CREATE TABLE IF NOT EXISTS compilation_events
     compilation_id BIGINT NOT NULL,
     events_id      BIGINT NOT NULL,
     CONSTRAINT fk_ce_compilation_id FOREIGN KEY (compilation_id) REFERENCES compilation (id) ON DELETE CASCADE,
-    CONSTRAINT fk_ce_event_id FOREIGN KEY (events_id) REFERENCES event (id) ON DELETE CASCADE
+    CONSTRAINT fk_ce_event_id FOREIGN KEY (events_id) REFERENCES event (id) ON DELETE CASCADE,
+    CONSTRAINT pk_compilation_events PRIMARY KEY (compilation_id, events_id)
 );

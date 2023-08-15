@@ -10,7 +10,7 @@ import java.util.Set;
 import static ru.practicum.constants.UtilConstants.DATE_TIME_PATTERN;
 
 @Data
-public class EventPublicQuery {
+public class EventPublicQuery implements Query {
     private String text;
     private Set<Long> categories;
     private Boolean paid;

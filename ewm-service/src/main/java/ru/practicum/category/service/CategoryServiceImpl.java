@@ -7,10 +7,12 @@ import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
-import ru.practicum.util.exception.category.CategoryNotFoundException;
+import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.pagerequest.PageRequester;
 
 import java.util.List;
+
+import static ru.practicum.constants.UtilConstants.CATEGORY;
 
 @Service
 @Transactional
@@ -46,12 +48,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto getCategoryPublic(Long catId) {
         return toDto(categoryRepository.findById(catId)
-                .orElseThrow(() -> new CategoryNotFoundException(catId)));
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY, catId)));
     }
 
     private void categoryExistsCheck(Long catId) {
         if (!categoryRepository.existsById(catId)) {
-            throw new CategoryNotFoundException(catId);
+            throw new EntityNotFoundException(CATEGORY, catId);
         }
     }
 

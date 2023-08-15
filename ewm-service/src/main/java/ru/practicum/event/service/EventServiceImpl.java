@@ -7,33 +7,27 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.dto.ViewStats;
-import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
-import ru.practicum.event.dto.EventUpdateDto;
-import ru.practicum.event.dto.NewEventDto;
+import ru.practicum.event.dto.*;
 import ru.practicum.event.dto.query.EventAdminQuery;
 import ru.practicum.event.dto.query.EventPublicQuery;
 import ru.practicum.event.enums.SortType;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
+import ru.practicum.request.model.ConfirmedRequestsCount;
+import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 import ru.practicum.util.client.EwmStatsClient;
-import ru.practicum.util.exception.category.CategoryNotFoundException;
+import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.exception.event.EventConstraintException;
-import ru.practicum.util.exception.event.EventNotFoundException;
-import ru.practicum.util.exception.user.UserNotFoundException;
 import ru.practicum.util.pagerequest.PageRequester;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.practicum.constants.UtilConstants.ADMIN_TIME_RANGE_LIMIT;
+import static ru.practicum.constants.UtilConstants.*;
 import static ru.practicum.event.enums.SortType.VIEWS;
 import static ru.practicum.event.enums.State.*;
 
@@ -45,7 +39,9 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final RequestRepository requestRepository;
     private final EwmStatsClient ewmStatsClient;
+    private final EventMapper mapper = EventMapper.INSTANCE;
 
     @Override
     public List<EventShortDto> getShortEventsPrivate(Long userId, Integer from, Integer size) {
@@ -72,7 +68,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto updateEventPrivate(Long userId,
                                            Long eventId,
-                                           EventUpdateDto updateEvent) {
+                                           UserEventUpdateDto updateEvent) {
         eventInitiatorCheck(userId, eventId);
         Event event = findNotPublishedEvent(userId, eventId);
         updateEventStatePrivate(updateEvent, event);
@@ -81,9 +77,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateEventAdmin(Long eventId, EventUpdateDto updateEvent) {
+    public EventFullDto updateEventAdmin(Long eventId, AdminEventUpdateDto updateEvent) {
         Event event = findEvent(eventId);
-        eventDateAdminConstraintCheck(event.getEventDate());
         updateEventStateAdmin(updateEvent, event);
         update(updateEvent, event);
         return toDto(eventRepository.save(event));
@@ -127,7 +122,7 @@ public class EventServiceImpl implements EventService {
         return toDto(setEventsViews(List.of(findPublishedEvent(eventId))).get(0));
     }
 
-    private void updateEventStateAdmin(EventUpdateDto updateDto, Event event) {
+    private void updateEventStateAdmin(AdminEventUpdateDto updateDto, Event event) {
         if (Objects.nonNull(updateDto.getStateAction())) {
             switch (updateDto.getStateAction()) {
                 case PUBLISH_EVENT:
@@ -145,13 +140,11 @@ public class EventServiceImpl implements EventService {
                         throw new EventConstraintException("Error! Couldn't reject PUBLISHED Event.");
                     }
                     break;
-                default:
-                    throw new EventConstraintException("Error! Unknown StateAction.");
             }
         }
     }
 
-    private void updateEventStatePrivate(EventUpdateDto updateDto, Event event) {
+    private void updateEventStatePrivate(UserEventUpdateDto updateDto, Event event) {
         if (Objects.nonNull(updateDto.getStateAction())) {
             switch (updateDto.getStateAction()) {
                 case SEND_TO_REVIEW:
@@ -160,8 +153,6 @@ public class EventServiceImpl implements EventService {
                 case CANCEL_REVIEW:
                     event.setState(CANCELED);
                     break;
-                default:
-                    throw new EventConstraintException("Error! Unknown StateAction.");
             }
         }
     }
@@ -174,17 +165,25 @@ public class EventServiceImpl implements EventService {
     }
 
     private List<Event> setEventsViews(List<Event> events) {
+        Optional<LocalDateTime> start = events.stream()
+                .map(Event::getPublishedOn)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo);
+        if (start.isEmpty()) {
+            return events;
+        }
         Map<Long, Long> eventIdAndViews = mapViewStats(
-                requestViewStats(toEventUrls(events)));
+                requestViewStats(start.get(), toEventUrls(events)));
         if (!eventIdAndViews.isEmpty()) {
             events.forEach(event -> event.setViews(eventIdAndViews.getOrDefault(event.getId(), 0L)));
         }
         return events;
     }
 
-    private List<ViewStats> requestViewStats(List<String> eventsUrls) {
+    private List<ViewStats> requestViewStats(LocalDateTime start, List<String> eventsUrls) {
+
         return ewmStatsClient.getViewsStats(
-                LocalDateTime.now().minusYears(100),
+                start,
                 LocalDateTime.now(),
                 eventsUrls,
                 true);
@@ -211,9 +210,46 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    private List<EventFullDto> setEventsDtoConfirmedRequests(List<EventFullDto> events) {
+        Map<Long, Long> eventIdAndConfirmedRequests = mapConfirmedRequests(
+                requestRepository.findConfirmedRequests(events.stream()
+                        .map(EventFullDto::getId)
+                        .collect(Collectors.toList())));
+        if (eventIdAndConfirmedRequests.isEmpty()) {
+            events.forEach(event -> event.setConfirmedRequests(0L));
+        } else {
+            events.forEach(event -> event.setConfirmedRequests(
+                    eventIdAndConfirmedRequests.getOrDefault(event.getId(), 0L)));
+        }
+        return events;
+    }
+
+    private List<EventShortDto> setEventsShortDtoConfirmedRequests(List<EventShortDto> events) {
+        Map<Long, Long> eventIdAndConfirmedRequests = mapConfirmedRequests(
+                requestRepository.findConfirmedRequests(events.stream()
+                        .map(EventShortDto::getId)
+                        .collect(Collectors.toList())));
+        if (eventIdAndConfirmedRequests.isEmpty()) {
+            events.forEach(event -> event.setConfirmedRequests(0L));
+        } else {
+            events.forEach(event -> event.setConfirmedRequests(
+                    eventIdAndConfirmedRequests.getOrDefault(event.getId(), 0L)));
+        }
+        return events;
+    }
+
+    private Map<Long, Long> mapConfirmedRequests(List<ConfirmedRequestsCount> confirmedRequests) {
+        return confirmedRequests.stream()
+                .collect(
+                        Collectors.toMap(
+                                ConfirmedRequestsCount::getEventId,
+                                ConfirmedRequestsCount::getCount)
+                );
+    }
+
     private Event findPublishedEvent(Long eventId) {
         return eventRepository.findByIdAndState(eventId, PUBLISHED)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+                .orElseThrow(() -> new EntityNotFoundException(EVENT, eventId));
     }
 
     private Event findNotPublishedEvent(Long userId, Long eventId) {
@@ -224,56 +260,52 @@ public class EventServiceImpl implements EventService {
 
     private Category findCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY, categoryId));
     }
 
     private User findInitiator(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-    }
-
-    private void eventDateAdminConstraintCheck(LocalDateTime eventDate) {
-        if (!eventDate.isAfter(LocalDateTime.now().plusHours(ADMIN_TIME_RANGE_LIMIT))) {
-            throw new EventConstraintException(
-                    String.format("Error! EventDate should be at least %d hours after the current time.",
-                            ADMIN_TIME_RANGE_LIMIT));
-        }
+                .orElseThrow(() -> new EntityNotFoundException(USERS, userId));
     }
 
     private Event findEvent(Long eventId) {
         return eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+                .orElseThrow(() -> new EntityNotFoundException(EVENT, eventId));
     }
 
     private Event findEvent(Long userId, Long eventId) {
         return eventRepository.findByIdAndInitiator_Id(eventId, userId)
-                .orElseThrow(() -> new EventNotFoundException(eventId, userId));
+                .orElseThrow(() -> new EntityNotFoundException(USERS, userId, EVENT, eventId));
     }
 
     private void eventInitiatorCheck(Long userId, Long eventId) {
         if (!eventRepository.existsByIdAndInitiator_Id(eventId, userId)) {
-            throw new EventNotFoundException(eventId, userId);
+            throw new EntityNotFoundException(USERS, userId, EVENT, eventId);
         }
     }
 
     private void update(EventUpdateDto dto, Event entity) {
-        EventMapper.INSTANCE.update(dto, entity);
+        mapper.update(dto, entity);
     }
 
     private Event toEntity(NewEventDto newEventDto) {
-        return EventMapper.INSTANCE.toEntity(newEventDto);
+        return mapper.toEntity(newEventDto);
     }
 
     private EventFullDto toDto(Event event) {
-        return EventMapper.INSTANCE.toDto(event);
+        EventFullDto dto = mapper.toDto(event);
+        setEventsDtoConfirmedRequests(List.of(dto));
+        return dto;
     }
 
-    private List<EventFullDto> toDto(List<Event> event) {
-        return EventMapper.INSTANCE.toDto(event);
+    private List<EventFullDto> toDto(List<Event> events) {
+        List<EventFullDto> list = mapper.toDto(events);
+        return setEventsDtoConfirmedRequests(list);
     }
 
     private List<EventShortDto> toShortDto(List<Event> events) {
-        return EventMapper.INSTANCE.toShortDto(events);
+        List<EventShortDto> list = mapper.toShortDto(events);
+        return setEventsShortDtoConfirmedRequests(list);
     }
 
 }

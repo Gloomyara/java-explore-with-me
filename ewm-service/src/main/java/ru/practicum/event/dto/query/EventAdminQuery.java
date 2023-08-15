@@ -14,7 +14,7 @@ import static ru.practicum.constants.UtilConstants.DATE_TIME_PATTERN;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventAdminQuery {
+public class EventAdminQuery implements Query {
     private Set<Long> users;
     private Set<State> states = Set.of(State.PENDING);
     private Set<Long> categories;

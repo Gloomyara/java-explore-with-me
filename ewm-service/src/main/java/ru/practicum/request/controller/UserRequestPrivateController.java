@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.event.dto.EventStatusUpdateDto;
-import ru.practicum.request.dto.RequestStatusUpdateDto;
+import ru.practicum.request.dto.EventRequestStatusUpdateDto;
 import ru.practicum.request.dto.ParticipationRequestDto;
+import ru.practicum.request.dto.RequestStatusUpdateDto;
 import ru.practicum.request.service.RequestService;
 
 import javax.validation.Valid;
@@ -64,7 +64,7 @@ public class UserRequestPrivateController {
     public ResponseEntity<RequestStatusUpdateDto> updateRequestStatus(
             @PathVariable @Positive Long userId,
             @PathVariable @Positive Long eventId,
-            @Valid @RequestBody EventStatusUpdateDto dto) {
+            @Valid @RequestBody EventRequestStatusUpdateDto dto) {
         log.info("Received PATCH {}/{}{}/{}{} request, dto: {}.",
                 USERS_PATH, userId, EVENT_PATH, eventId, REQUEST_PATH, dto);
         return ResponseEntity.ok(requestService.updateEventRequestsStatusPrivate(userId, eventId, dto));

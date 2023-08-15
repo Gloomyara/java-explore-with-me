@@ -20,8 +20,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int participantLimit;
-    private int confirmedRequests;
+    private long participantLimit;
 
     private String title;
     private String annotation;

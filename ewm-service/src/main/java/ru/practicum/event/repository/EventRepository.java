@@ -17,7 +17,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select count(e) > 0 " +
             "from Event e " +
             "where e.id = :eventId " +
-            "and (e.participantLimit = 0 or e.participantLimit > e.confirmedRequests) ")
+            "and (e.participantLimit = 0 or " +
+            "     COALESCE((select count(r) " +
+            "      from Request r " +
+            "      where r.event.id = :eventId " +
+            "      and (r.status = 'CONFIRMED') " +
+            "      group by r.event.id), 0) < e.participantLimit) ")
     boolean existsByIdAndParticipantLimitNotReached(Long eventId);
 
     @Query("select count(e) > 0 " +
@@ -35,8 +40,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and ((:categoryIds) is NULL or e.category.id IN (:categoryIds)) " +
             "and (:paid is NULL or e.paid = :paid) " +
             "and ((:onlyAvailable is TRUE " +
-            "     and (e.participantLimit > e.confirmedRequests or e.participantLimit = 0)) " +
-            "or :onlyAvailable is FALSE) " +
+            "     and (e.participantLimit = 0" +
+            "     or COALESCE((select count(r) " +
+            "         from Request r " +
+            "         where r.event.id = e.id " +
+            "         and (r.status = 'CONFIRMED') " +
+            "         group by r.event.id), 0) < e.participantLimit)) " +
+            "     or :onlyAvailable is FALSE) " +
             "and e.eventDate BETWEEN :start and :end ")
     Page<Event> findEvents(String text,
                            Set<Long> categoryIds,
@@ -70,7 +80,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     boolean existsByIdAndState(Long eventId, State state);
 
-    List<Event> findEventsByIdIn(List<Long> ids);
+    Set<Event> findEventsByIdIn(List<Long> ids);
 
     Optional<Event> findByIdAndState(Long eventId, State state);
 

@@ -17,6 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper mapper = UserMapper.INSTANCE;
 
     @Override
     public List<UserDto> getUsersAdmin(Set<Long> ids, Integer from, Integer size) {
@@ -34,14 +35,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private User toEntity(NewUserDto newUserDto) {
-        return UserMapper.INSTANCE.toEntity(newUserDto);
+        return mapper.toEntity(newUserDto);
     }
 
     private UserDto toDto(User user) {
-        return UserMapper.INSTANCE.toDto(user);
+        return mapper.toDto(user);
     }
 
     private List<UserDto> toDto(List<User> user) {
-        return UserMapper.INSTANCE.toDto(user);
+        return mapper.toDto(user);
     }
 }

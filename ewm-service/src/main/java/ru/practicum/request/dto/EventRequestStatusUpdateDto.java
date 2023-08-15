@@ -1,16 +1,22 @@
-package ru.practicum.event.dto;
+package ru.practicum.request.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.request.enums.Status;
 
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventStatusUpdateDto {
+public class EventRequestStatusUpdateDto {
     private Set<Long> requestIds;
     private Status status;
+
+    public enum Status {
+        CONFIRMED,
+        PENDING,
+        REJECTED,
+        CANCELED
+    }
 }
