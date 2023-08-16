@@ -9,14 +9,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventRequestStatusUpdateDto {
+public class RequestStatusUpdateDtoIn {
     private Set<Long> requestIds;
-    private Status status;
+    private RequestStatus status;
 
-    public enum Status {
+    public enum RequestStatus {
         CONFIRMED,
-        PENDING,
-        REJECTED,
-        CANCELED
+        REJECTED
     }
 }

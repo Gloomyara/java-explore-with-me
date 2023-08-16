@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.exception.event.EventConstraintException;
-import ru.practicum.util.exception.request.ConfirmationNotRequiredException;
+import ru.practicum.util.exception.request.NotRequiredConfirmationException;
 import ru.practicum.util.exception.request.RequestConstraintException;
 import ru.practicum.util.exception.user.UserAccessException;
 
@@ -54,7 +54,7 @@ public class ErrorHandler {
 
     @ExceptionHandler({
             ConstraintViolationException.class,
-            ConfirmationNotRequiredException.class,
+            NotRequiredConfirmationException.class,
             UserAccessException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequest(HttpServletRequest request,

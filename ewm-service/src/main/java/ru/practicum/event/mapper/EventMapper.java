@@ -22,9 +22,9 @@ public interface EventMapper {
     @Mapping(target = "location", source = "event.location")
     EventFullDto toDto(Event event);
 
-    List<EventFullDto> toDto(List<Event> event);
+    List<EventFullDto> toDto(List<Event> events);
 
-    List<EventShortDto> toShortDto(List<Event> event);
+    List<EventShortDto> toShortDto(List<Event> events);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "category.id", source = "categoryId")

@@ -18,6 +18,6 @@ public interface RequestMapper {
     @Mapping(target = "requester", source = "requester.id")
     ParticipationRequestDto toDto(Request request);
 
-    List<ParticipationRequestDto> toDto(List<Request> request);
+    List<ParticipationRequestDto> toDto(List<Request> requests);
 
 }

@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface CategoryService {
 
-    CategoryDto saveNewCategoryAdmin(CategoryDto categoryDto);
+    CategoryDto saveNewCategoryAdmin(CategoryDto dto);
 
-    CategoryDto updateCategoryAdmin(Long catId, CategoryDto categoryDto);
+    CategoryDto updateCategoryAdmin(Long catId, CategoryDto dto);
 
     List<CategoryDto> getCategoriesPublic(Integer from, Integer size);
 

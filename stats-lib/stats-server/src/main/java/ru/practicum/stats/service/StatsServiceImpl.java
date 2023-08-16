@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.dto.EndpointHit;
 import ru.practicum.dto.ViewStats;
 import ru.practicum.stats.mapper.StatsMapper;
-import ru.practicum.stats.model.Stats;
 import ru.practicum.stats.repository.StatsRepository;
 
 import java.time.LocalDateTime;
@@ -17,8 +16,8 @@ public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
 
     @Override
-    public EndpointHit saveHit(EndpointHit endpointHit) {
-        return toDto(statsRepository.save(toEntity(endpointHit)));
+    public EndpointHit saveHit(EndpointHit dto) {
+        return StatsMapper.toDto(statsRepository.save(StatsMapper.toEntity(dto)));
     }
 
     @Override
@@ -37,13 +36,5 @@ public class StatsServiceImpl implements StatsService {
         } else {
             return statsRepository.findAllUniqueViewStats(start, end, uris);
         }
-    }
-
-    private Stats toEntity(EndpointHit endpointHit) {
-        return StatsMapper.toEntity(endpointHit);
-    }
-
-    private EndpointHit toDto(Stats stats) {
-        return StatsMapper.toDto(stats);
     }
 }

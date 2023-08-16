@@ -1,15 +1,15 @@
-package ru.practicum.util.pagerequest;
+package ru.practicum.util.pager;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-public class PageRequester extends PageRequest {
+public class Pager extends PageRequest {
 
-    public PageRequester(int from, int size) {
+    public Pager(int from, int size) {
         super(from / size, size, Sort.unsorted());
     }
 
-    public PageRequester(int from, int size, Sort sort) {
+    public Pager(int from, int size, Sort sort) {
         super(from / size, size, sort);
     }
 

@@ -5,10 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
-import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.util.exception.EntityNotFoundException;
-import ru.practicum.util.pagerequest.PageRequester;
+import ru.practicum.util.pager.Pager;
 
 import java.util.List;
 
@@ -19,17 +18,18 @@ import static ru.practicum.constants.UtilConstants.CATEGORY;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper mapper = CategoryMapper.INSTANCE;
 
     @Override
-    public CategoryDto saveNewCategoryAdmin(CategoryDto categoryDto) {
-        return toDto(categoryRepository.save(toEntity(categoryDto)));
+    public CategoryDto saveNewCategoryAdmin(CategoryDto dto) {
+        return mapper.toDto(categoryRepository.save(mapper.toEntity(dto)));
     }
 
     @Override
-    public CategoryDto updateCategoryAdmin(Long catId, CategoryDto categoryDto) {
+    public CategoryDto updateCategoryAdmin(Long catId, CategoryDto dto) {
         categoryExistsCheck(catId);
-        categoryDto.setId(catId);
-        return toDto(categoryRepository.save(toEntity(categoryDto)));
+        dto.setId(catId);
+        return mapper.toDto(categoryRepository.save(mapper.toEntity(dto)));
     }
 
     @Override
@@ -41,13 +41,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategoriesPublic(Integer from, Integer size) {
-        return toDto(categoryRepository.findAll(new PageRequester(from, size)).toList());
+        return mapper.toDto(categoryRepository.findAll(new Pager(from, size)).toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public CategoryDto getCategoryPublic(Long catId) {
-        return toDto(categoryRepository.findById(catId)
+        return mapper.toDto(categoryRepository.findById(catId)
                 .orElseThrow(() -> new EntityNotFoundException(CATEGORY, catId)));
     }
 
@@ -56,17 +56,4 @@ public class CategoryServiceImpl implements CategoryService {
             throw new EntityNotFoundException(CATEGORY, catId);
         }
     }
-
-    private Category toEntity(CategoryDto categoryDto) {
-        return CategoryMapper.INSTANCE.toEntity(categoryDto);
-    }
-
-    private CategoryDto toDto(Category category) {
-        return CategoryMapper.INSTANCE.toDto(category);
-    }
-
-    private List<CategoryDto> toDto(List<Category> category) {
-        return CategoryMapper.INSTANCE.toDto(category);
-    }
-
 }

@@ -21,7 +21,7 @@ import ru.practicum.user.repository.UserRepository;
 import ru.practicum.util.client.EwmStatsClient;
 import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.exception.event.EventConstraintException;
-import ru.practicum.util.pagerequest.PageRequester;
+import ru.practicum.util.pager.Pager;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -45,43 +45,54 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getShortEventsPrivate(Long userId, Integer from, Integer size) {
-        return toShortDto(eventRepository.findAllByInitiatorId(userId, new PageRequester(from, size)).toList());
+        return setEventsShortDtoConfirmedRequests(
+                mapper.toShortDto(eventRepository.findAllByInitiatorId(
+                        userId, new Pager(from, size)).toList())
+        );
     }
 
     @Override
-    public EventFullDto saveNewEventPrivate(Long userId, NewEventDto newEventDto) {
+    public EventFullDto saveNewEventPrivate(Long userId, NewEventDto dto) {
         User initiator = findInitiator(userId);
-        Category category = findCategory(newEventDto.getCategoryId());
-        Event newEvent = toEntity(newEventDto);
+        Category category = findCategory(dto.getCategoryId());
+        Event newEvent = mapper.toEntity(dto);
         newEvent.setInitiator(initiator);
         newEvent.setCategory(category);
         newEvent.setState(PENDING);
         newEvent.setCreatedOn(LocalDateTime.now());
-        return toDto(eventRepository.save(newEvent));
+        return setEventsDtoConfirmedRequests(
+                mapper.toDto(eventRepository.save(newEvent))
+        );
     }
 
     @Override
     public EventFullDto getFullEventPrivate(Long userId, Long eventId) {
-        return toDto(findEvent(userId, eventId));
+        return setEventsDtoConfirmedRequests(
+                mapper.toDto(findEvent(userId, eventId))
+        );
     }
 
     @Override
     public EventFullDto updateEventPrivate(Long userId,
                                            Long eventId,
-                                           UserEventUpdateDto updateEvent) {
+                                           UserEventUpdateDto dto) {
         eventInitiatorCheck(userId, eventId);
         Event event = findNotPublishedEvent(userId, eventId);
-        updateEventStatePrivate(updateEvent, event);
-        update(updateEvent, event);
-        return toDto(eventRepository.save(event));
+        updateEventStatePrivate(dto, event);
+        mapper.update(dto, event);
+        return setEventsDtoConfirmedRequests(
+                mapper.toDto(eventRepository.save(event))
+        );
     }
 
     @Override
-    public EventFullDto updateEventAdmin(Long eventId, AdminEventUpdateDto updateEvent) {
+    public EventFullDto updateEventAdmin(Long eventId, AdminEventUpdateDto dto) {
         Event event = findEvent(eventId);
-        updateEventStateAdmin(updateEvent, event);
-        update(updateEvent, event);
-        return toDto(eventRepository.save(event));
+        updateEventStateAdmin(dto, event);
+        mapper.update(dto, event);
+        return setEventsDtoConfirmedRequests(
+                mapper.toDto(eventRepository.save(event))
+        );
     }
 
     @Override
@@ -95,9 +106,11 @@ public class EventServiceImpl implements EventService {
                         query.getCategories(),
                         query.getRangeStart(),
                         query.getRangeEnd(),
-                        new PageRequester(from, size))
+                        new Pager(from, size))
                 .toList();
-        return toDto(setEventsViews(events));
+        return setEventsDtoConfirmedRequests(
+                mapper.toDto(setEventsViews(events))
+        );
     }
 
     @Override
@@ -112,19 +125,23 @@ public class EventServiceImpl implements EventService {
                         query.isOnlyAvailable(),
                         query.getRangeStart(),
                         query.getRangeEnd(),
-                        new PageRequester(from, size, Sort.by("eventDate")))
+                        new Pager(from, size, Sort.by("eventDate")))
                 .toList();
-        return toShortDto(eventsSort(setEventsViews(events), query.getSort()));
+        return setEventsShortDtoConfirmedRequests(
+                mapper.toShortDto(eventsSort(setEventsViews(events), query.getSort()))
+        );
     }
 
     @Override
     public EventFullDto getEventPublic(Long eventId) {
-        return toDto(setEventsViews(List.of(findPublishedEvent(eventId))).get(0));
+        return setEventsDtoConfirmedRequests(
+                mapper.toDto(setEventsViews(List.of(findPublishedEvent(eventId))))
+        ).get(0);
     }
 
-    private void updateEventStateAdmin(AdminEventUpdateDto updateDto, Event event) {
-        if (Objects.nonNull(updateDto.getStateAction())) {
-            switch (updateDto.getStateAction()) {
+    private void updateEventStateAdmin(AdminEventUpdateDto dto, Event event) {
+        if (Objects.nonNull(dto.getStateAction())) {
+            switch (dto.getStateAction()) {
                 case PUBLISH_EVENT:
                     if (event.getState() == PENDING) {
                         event.setState(PUBLISHED);
@@ -144,9 +161,9 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    private void updateEventStatePrivate(UserEventUpdateDto updateDto, Event event) {
-        if (Objects.nonNull(updateDto.getStateAction())) {
-            switch (updateDto.getStateAction()) {
+    private void updateEventStatePrivate(UserEventUpdateDto dto, Event event) {
+        if (Objects.nonNull(dto.getStateAction())) {
+            switch (dto.getStateAction()) {
                 case SEND_TO_REVIEW:
                     event.setState(PENDING);
                     break;
@@ -173,26 +190,26 @@ public class EventServiceImpl implements EventService {
             return events;
         }
         Map<Long, Long> eventIdAndViews = mapViewStats(
-                requestViewStats(start.get(), toEventUrls(events)));
+                requestViewStats(start.get(), toEventUris(events)));
         if (!eventIdAndViews.isEmpty()) {
             events.forEach(event -> event.setViews(eventIdAndViews.getOrDefault(event.getId(), 0L)));
         }
         return events;
     }
 
-    private List<ViewStats> requestViewStats(LocalDateTime start, List<String> eventsUrls) {
+    private List<ViewStats> requestViewStats(LocalDateTime start, List<String> eventUris) {
 
         return ewmStatsClient.getViewsStats(
                 start,
                 LocalDateTime.now(),
-                eventsUrls,
+                eventUris,
                 true);
     }
 
-    private List<String> toEventUrls(List<Event> events) {
-        List<String> eventUrls = new ArrayList<>();
-        events.forEach(event -> eventUrls.add("/events/" + event.getId()));
-        return eventUrls;
+    private List<String> toEventUris(List<Event> events) {
+        List<String> eventUris = new ArrayList<>();
+        events.forEach(event -> eventUris.add("/events/" + event.getId()));
+        return eventUris;
     }
 
     private Map<Long, Long> mapViewStats(List<ViewStats> viewStats) {
@@ -208,6 +225,10 @@ public class EventServiceImpl implements EventService {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Error! Check EndpointHit uri's.");
         }
+    }
+
+    private EventFullDto setEventsDtoConfirmedRequests(EventFullDto event) {
+        return setEventsDtoConfirmedRequests(List.of(event)).get(0);
     }
 
     private List<EventFullDto> setEventsDtoConfirmedRequests(List<EventFullDto> events) {
@@ -283,29 +304,4 @@ public class EventServiceImpl implements EventService {
             throw new EntityNotFoundException(USERS, userId, EVENT, eventId);
         }
     }
-
-    private void update(EventUpdateDto dto, Event entity) {
-        mapper.update(dto, entity);
-    }
-
-    private Event toEntity(NewEventDto newEventDto) {
-        return mapper.toEntity(newEventDto);
-    }
-
-    private EventFullDto toDto(Event event) {
-        EventFullDto dto = mapper.toDto(event);
-        setEventsDtoConfirmedRequests(List.of(dto));
-        return dto;
-    }
-
-    private List<EventFullDto> toDto(List<Event> events) {
-        List<EventFullDto> list = mapper.toDto(events);
-        return setEventsDtoConfirmedRequests(list);
-    }
-
-    private List<EventShortDto> toShortDto(List<Event> events) {
-        List<EventShortDto> list = mapper.toShortDto(events);
-        return setEventsShortDtoConfirmedRequests(list);
-    }
-
 }

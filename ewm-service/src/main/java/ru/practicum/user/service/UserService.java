@@ -10,7 +10,7 @@ public interface UserService {
 
     List<UserDto> getUsersAdmin(Set<Long> ids, Integer from, Integer size);
 
-    UserDto saveNewUserAdmin(NewUserDto newUserDto);
+    UserDto saveNewUserAdmin(NewUserDto dto);
 
     void deleteUserAdmin(Long userId);
 

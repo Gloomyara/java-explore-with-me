@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.user.dto.NewUserDto;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.mapper.UserMapper;
-import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
-import ru.practicum.util.pagerequest.PageRequester;
+import ru.practicum.util.pager.Pager;
 
 import java.util.List;
 import java.util.Set;
@@ -21,12 +20,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsersAdmin(Set<Long> ids, Integer from, Integer size) {
-        return toDto(userRepository.findAllByIdIn(ids, new PageRequester(from, size, Sort.by("id"))).toList());
+        return mapper.toDto(userRepository.findAllByIdIn(ids, new Pager(from, size, Sort.by("id"))).toList());
     }
 
     @Override
-    public UserDto saveNewUserAdmin(NewUserDto newUserDto) {
-        return toDto(userRepository.save(toEntity(newUserDto)));
+    public UserDto saveNewUserAdmin(NewUserDto dto) {
+        return mapper.toDto(userRepository.save(mapper.toEntity(dto)));
     }
 
     @Override
@@ -34,15 +33,4 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
-    private User toEntity(NewUserDto newUserDto) {
-        return mapper.toEntity(newUserDto);
-    }
-
-    private UserDto toDto(User user) {
-        return mapper.toDto(user);
-    }
-
-    private List<UserDto> toDto(List<User> user) {
-        return mapper.toDto(user);
-    }
 }

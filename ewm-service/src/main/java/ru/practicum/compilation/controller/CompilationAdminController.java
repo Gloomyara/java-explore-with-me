@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.CompilationDto;
-import ru.practicum.compilation.dto.NewCompilationsDto;
+import ru.practicum.compilation.dto.NewCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationDto;
 import ru.practicum.compilation.service.CompilationService;
 
@@ -28,11 +28,11 @@ public class CompilationAdminController {
 
     @PostMapping
     public ResponseEntity<CompilationDto> saveNewCompilations(
-            @Valid @RequestBody NewCompilationsDto newCompilationsDto) {
-        log.info("Received GET {} request, dto: {}.", path, newCompilationsDto);
+            @Valid @RequestBody NewCompilationDto dto) {
+        log.info("Received GET {} request, dto: {}.", path, dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(compilationService.saveNewCompilationAdmin(newCompilationsDto));
+                .body(compilationService.saveNewCompilationAdmin(dto));
     }
 
     @PatchMapping(COMPILATION_ID_VAR)

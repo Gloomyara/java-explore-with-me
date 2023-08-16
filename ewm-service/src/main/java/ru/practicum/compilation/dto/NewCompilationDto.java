@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewCompilationsDto {
+public class NewCompilationDto {
     private List<Long> events = Collections.emptyList();
     private boolean pinned;
     @NotBlank

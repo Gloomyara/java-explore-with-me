@@ -3,7 +3,7 @@ package ru.practicum.request.model;
 import lombok.*;
 import org.hibernate.Hibernate;
 import ru.practicum.event.model.Event;
-import ru.practicum.request.dto.EventRequestStatusUpdateDto.Status;
+import ru.practicum.request.enums.Status;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;

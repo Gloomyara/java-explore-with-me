@@ -44,8 +44,8 @@ public class StatsClient {
     }
 
     @SneakyThrows
-    public ResponseEntity<EndpointHit> saveEndpointHit(EndpointHit endpointHit) {
-        String json = objectMapper.writeValueAsString(endpointHit);
+    public ResponseEntity<EndpointHit> saveEndpointHit(EndpointHit dto) {
+        String json = objectMapper.writeValueAsString(dto);
         return restTemplate.exchange(
                 serverUrl + HIT_PATH,
                 HttpMethod.POST,

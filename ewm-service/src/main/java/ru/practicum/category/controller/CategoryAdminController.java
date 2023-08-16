@@ -26,19 +26,19 @@ public class CategoryAdminController {
 
     @PostMapping
     public ResponseEntity<CategoryDto> saveNewCategory(
-            @Valid @RequestBody CategoryDto categoryDto) {
-        log.info("Received POST {} request, dto: {}.", path, categoryDto);
+            @Valid @RequestBody CategoryDto dto) {
+        log.info("Received POST {} request, dto: {}.", path, dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(categoryService.saveNewCategoryAdmin(categoryDto));
+                .body(categoryService.saveNewCategoryAdmin(dto));
     }
 
     @PatchMapping(CATEGORY_ID_VAR)
     public ResponseEntity<CategoryDto> updateCategory(
             @PathVariable @Positive Long catId,
-            @Valid @RequestBody CategoryDto categoryDto) {
-        log.info("Received PATCH {}/{} request, dto: {}.", path, catId, categoryDto);
-        return ResponseEntity.ok(categoryService.updateCategoryAdmin(catId, categoryDto));
+            @Valid @RequestBody CategoryDto dto) {
+        log.info("Received PATCH {}/{} request, dto: {}.", path, catId, dto);
+        return ResponseEntity.ok(categoryService.updateCategoryAdmin(catId, dto));
     }
 
     @DeleteMapping(CATEGORY_ID_VAR)

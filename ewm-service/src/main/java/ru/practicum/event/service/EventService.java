@@ -13,23 +13,23 @@ public interface EventService {
                                               Integer size);
 
     EventFullDto saveNewEventPrivate(Long userId,
-                                     NewEventDto newEventDto);
+                                     NewEventDto dto);
 
     EventFullDto getFullEventPrivate(Long userId,
                                      Long eventId);
 
     EventFullDto updateEventPrivate(Long userId,
                                     Long eventId,
-                                    UserEventUpdateDto eventUpdateDto);
+                                    UserEventUpdateDto dto);
 
     EventFullDto updateEventAdmin(Long eventId,
-                                  AdminEventUpdateDto eventUpdateDto);
+                                  AdminEventUpdateDto dto);
 
-    List<EventShortDto> getShortEventsPublic(EventPublicQuery eventPublicQuery,
+    List<EventShortDto> getShortEventsPublic(EventPublicQuery query,
                                              Integer from,
                                              Integer size);
 
-    List<EventFullDto> getEventsAdmin(EventAdminQuery eventAdminQuery,
+    List<EventFullDto> getEventsAdmin(EventAdminQuery query,
                                       Integer from,
                                       Integer size);
 

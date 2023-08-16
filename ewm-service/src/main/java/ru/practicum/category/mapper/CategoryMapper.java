@@ -11,9 +11,9 @@ import java.util.List;
 public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-    Category toEntity(CategoryDto categoryDto);
+    Category toEntity(CategoryDto dto);
 
     CategoryDto toDto(Category category);
 
-    List<CategoryDto> toDto(List<Category> category);
+    List<CategoryDto> toDto(List<Category> categories);
 }

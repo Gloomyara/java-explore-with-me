@@ -18,7 +18,7 @@ public interface CompilationMapper {
 
     CompilationDto toDto(Compilation compilation);
 
-    List<CompilationDto> toDto(List<Compilation> compilation);
+    List<CompilationDto> toDto(List<Compilation> compilations);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void update(UpdateCompilationDto dto, @MappingTarget Compilation entity);

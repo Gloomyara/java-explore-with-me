@@ -44,11 +44,11 @@ public class StatsController {
     }
 
     @PostMapping(HIT_PATH)
-    public ResponseEntity<EndpointHit> post(@Valid @RequestBody EndpointHit endpointHit) {
-        log.info("Received POST {} request, dto: {}.", HIT_PATH, endpointHit);
+    public ResponseEntity<EndpointHit> post(@Valid @RequestBody EndpointHit dto) {
+        log.info("Received POST {} request, dto: {}.", HIT_PATH, dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(statsService.saveHit(endpointHit));
+                .body(statsService.saveHit(dto));
     }
 
     private void validateTimeRange(LocalDateTime start, LocalDateTime end) {

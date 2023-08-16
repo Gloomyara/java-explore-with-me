@@ -1,7 +1,7 @@
 package ru.practicum.compilation.service;
 
 import ru.practicum.compilation.dto.CompilationDto;
-import ru.practicum.compilation.dto.NewCompilationsDto;
+import ru.practicum.compilation.dto.NewCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationDto;
 
 import java.util.List;
@@ -12,9 +12,9 @@ public interface CompilationService {
 
     CompilationDto getCompilationPublic(Long compId);
 
-    CompilationDto saveNewCompilationAdmin(NewCompilationsDto newCompilationsDto);
+    CompilationDto saveNewCompilationAdmin(NewCompilationDto dto);
 
-    CompilationDto updateCompilationAdmin(Long compId, UpdateCompilationDto updateCompilationDto);
+    CompilationDto updateCompilationAdmin(Long compId, UpdateCompilationDto dto);
 
     void deleteCompilationAdmin(Long compId);
 }
