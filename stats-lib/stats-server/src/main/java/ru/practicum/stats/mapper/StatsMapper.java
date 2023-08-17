@@ -7,16 +7,16 @@ import ru.practicum.stats.model.Stats;
 @UtilityClass
 public class StatsMapper {
 
-    public Stats toEntity(EndpointHit endpointHit) {
-        if (endpointHit == null) {
+    public Stats toEntity(EndpointHit dto) {
+        if (dto == null) {
             return null;
         }
 
         Stats stats = new Stats();
-        stats.setApp(endpointHit.getApp());
-        stats.setUri(endpointHit.getUri());
-        stats.setIp(endpointHit.getIp());
-        stats.setTimestamp(endpointHit.getTimestamp());
+        stats.setApp(dto.getApp());
+        stats.setUri(dto.getUri());
+        stats.setIp(dto.getIp());
+        stats.setTimestamp(dto.getTimestamp());
 
         return stats;
     }

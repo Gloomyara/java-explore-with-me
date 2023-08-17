@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static ru.practicum.dto.UtilConstants.*;
+import static ru.practicum.constants.UtilConstants.*;
 
 @Slf4j
 public class StatsClient {
@@ -44,8 +44,8 @@ public class StatsClient {
     }
 
     @SneakyThrows
-    public ResponseEntity<EndpointHit> saveEndpointHit(EndpointHit endpointHit) {
-        String json = objectMapper.writeValueAsString(endpointHit);
+    public ResponseEntity<EndpointHit> saveEndpointHit(EndpointHit dto) {
+        String json = objectMapper.writeValueAsString(dto);
         return restTemplate.exchange(
                 serverUrl + HIT_PATH,
                 HttpMethod.POST,
