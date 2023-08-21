@@ -48,4 +48,10 @@ public class UtilConstants {
      */
     public static final String REQUEST_PATH = "/requests";
     public static final String REQUEST = "Request";
+    /**
+     * Location-controller constants
+     */
+    public static final String LOCATIONS_PATH = "/locations";
+    public static final String LOCATION = "Location";
+    public static final String LOCATIONS_ID_VAR = "/{locId}";
 }

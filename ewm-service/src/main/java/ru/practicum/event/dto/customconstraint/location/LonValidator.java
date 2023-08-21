@@ -11,7 +11,7 @@ public class LonValidator implements ConstraintValidator<LonValidation, Double> 
     @Override
     public boolean isValid(Double object, ConstraintValidatorContext constraintContext) {
         if (object == null) {
-            return false;
+            return true;
         }
         if (object < min) {
             return false;

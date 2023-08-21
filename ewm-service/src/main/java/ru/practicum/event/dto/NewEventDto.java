@@ -39,7 +39,7 @@ public class NewEventDto implements EventDtoIn {
 
     @NotNull
     @Valid
-    private LocationDto location;
+    private EventLocationDto location;
     @PositiveOrZero
     private long participantLimit = 0L;
     private boolean paid = false;

@@ -3,7 +3,7 @@ package ru.practicum.event.model;
 import lombok.Data;
 
 @Data
-public class Location {
+public class EventLocation {
     /**
      * широта
      */

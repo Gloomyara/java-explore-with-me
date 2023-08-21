@@ -14,6 +14,7 @@ public class EventPublicQuery implements Query {
     private String text;
     private Set<Long> categories;
     private Boolean paid;
+    private Set<Long> locations;
 
     @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime rangeStart = LocalDateTime.now();
