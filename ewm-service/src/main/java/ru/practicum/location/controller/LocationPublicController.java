@@ -31,13 +31,13 @@ public class LocationPublicController {
             @RequestParam(defaultValue = FROM) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = SIZE) @Positive Integer size) {
         log.info("Received GET request, {} from: {}, size: {}.", LOCATIONS_PATH, from, size);
-        return ResponseEntity.ok().body(locationService.getLocations(from, size));
+        return ResponseEntity.ok(locationService.getLocations(from, size));
     }
 
     @GetMapping(LOCATIONS_ID_VAR)
     public ResponseEntity<LocationDto> getLocation(
             @PathVariable @Positive Long locId) {
         log.info("Received GET request, {}/{}", LOCATIONS_PATH, locId);
-        return ResponseEntity.ok().body(locationService.getLocation(locId));
+        return ResponseEntity.ok(locationService.getLocation(locId));
     }
 }

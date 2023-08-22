@@ -33,14 +33,14 @@ public class LocationAdminController {
             @RequestParam(defaultValue = FROM) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = SIZE) @Positive Integer size) {
         log.info("Received GET {} request, from: {}, size: {}.", path, from, size);
-        return ResponseEntity.ok().body(locationService.getLocations(from, size));
+        return ResponseEntity.ok(locationService.getLocations(from, size));
     }
 
     @GetMapping(LOCATIONS_ID_VAR)
     public ResponseEntity<LocationDto> getLocation(
             @PathVariable @Positive Long locId) {
         log.info("Received GET request, {}/{}", path, locId);
-        return ResponseEntity.ok().body(locationService.getLocation(locId));
+        return ResponseEntity.ok(locationService.getLocation(locId));
     }
 
     @PostMapping
@@ -57,7 +57,7 @@ public class LocationAdminController {
             @PathVariable @Positive Long locId,
             @Valid @RequestBody UpdateLocationDto dto) {
         log.info("Received PUT request, {}/{} dto: {}", path, locId, dto);
-        return ResponseEntity.ok().body(locationService.updateLocationAdmin(locId, dto));
+        return ResponseEntity.ok(locationService.updateLocationAdmin(locId, dto));
     }
 
     @DeleteMapping(LOCATIONS_ID_VAR)

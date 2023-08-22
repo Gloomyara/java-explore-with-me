@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e567137e-1fa9-4dd9-a8eb-8a66f644babe",
+		"_postman_id": "62d4c186-211f-4ea8-9d20-e30763ff4687",
 		"name": "feature",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23890044"
 	},
 	"item": [
 		{
@@ -11,6 +12,36 @@
 				{
 					"name": "admin",
 					"item": [
+						{
+							"name": "Refresh DB",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/test",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"test"
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "Location 1 create",
 							"event": [
