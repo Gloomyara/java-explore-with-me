@@ -18,6 +18,7 @@ public class EventAdminQuery implements Query {
     private Set<Long> users;
     private Set<State> states = Set.of(State.PENDING);
     private Set<Long> categories;
+    private Set<Long> locations;
 
     @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime rangeStart = LocalDateTime.now();

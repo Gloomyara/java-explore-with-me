@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.util.exception.EntityNotFoundException;
 import ru.practicum.util.exception.event.EventConstraintException;
+import ru.practicum.util.exception.locations.LocationAlreadyExistsException;
 import ru.practicum.util.exception.request.NotRequiredConfirmationException;
 import ru.practicum.util.exception.request.RequestConstraintException;
 import ru.practicum.util.exception.user.UserAccessException;
@@ -76,7 +77,8 @@ public class ErrorHandler {
             DataIntegrityViolationException.class,
             EventConstraintException.class,
             IllegalArgumentException.class,
-            RequestConstraintException.class
+            RequestConstraintException.class,
+            LocationAlreadyExistsException.class
     })
     public ResponseEntity<ErrorResponse> handleConflict(HttpServletRequest request,
                                                         final RuntimeException e) {

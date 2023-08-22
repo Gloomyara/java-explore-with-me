@@ -42,14 +42,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and ((:onlyAvailable is TRUE " +
             "     and (e.participantLimit = 0" +
             "     or COALESCE((select count(r) " +
-            "         from Request r " +
-            "         where r.event.id = e.id " +
-            "         and (r.status = 'CONFIRMED') " +
-            "         group by r.event.id), 0) < e.participantLimit)) " +
+            "        from Request r " +
+            "        where r.event.id = e.id " +
+            "        and (r.status = 'CONFIRMED') " +
+            "        group by r.event.id), 0) < e.participantLimit)) " +
             "     or :onlyAvailable is FALSE) " +
-            "and e.eventDate BETWEEN :start and :end ")
+            "and e.eventDate BETWEEN :start and :end " +
+            "and ((:locIds) is NULL " +
+            "     or EXISTS(select loc.id from Location loc " +
+            "        where loc.id IN (:locIds) " +
+            "        and function('distance', e.location.lon, e.location.lat, loc.lon, loc.lat) <= loc.radius)) ")
     Page<Event> findEvents(String text,
                            Set<Long> categoryIds,
+                           Set<Long> locIds,
                            Boolean paid,
                            boolean onlyAvailable,
                            LocalDateTime start,
@@ -61,10 +66,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "where ((:users) is NULL or e.initiator.id IN (:users)) " +
             "and ((:states) is NULL or e.state IN (:states)) " +
             "and ((:categories) is NULL or e.category.id IN (:categories)) " +
-            "and e.eventDate BETWEEN :start and :end ")
+            "and e.eventDate BETWEEN :start and :end " +
+            "and ((:locIds) is NULL " +
+            "     or EXISTS(select loc.id from Location loc " +
+            "        where loc.id IN (:locIds) " +
+            "        and function('distance', e.location.lon, e.location.lat, loc.lon, loc.lat) <= loc.radius)) ")
     Page<Event> findEvents(Set<Long> users,
                            Set<State> states,
                            Set<Long> categories,
+                           Set<Long> locIds,
                            LocalDateTime start,
                            LocalDateTime end,
                            Pageable pageable);

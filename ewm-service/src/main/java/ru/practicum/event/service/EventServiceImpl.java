@@ -104,6 +104,7 @@ public class EventServiceImpl implements EventService {
                         query.getUsers(),
                         query.getStates(),
                         query.getCategories(),
+                        query.getLocations(),
                         query.getRangeStart(),
                         query.getRangeEnd(),
                         new Pager(from, size))
@@ -121,6 +122,7 @@ public class EventServiceImpl implements EventService {
                 .findEvents(
                         query.getText(),
                         query.getCategories(),
+                        query.getLocations(),
                         query.getPaid(),
                         query.isOnlyAvailable(),
                         query.getRangeStart(),

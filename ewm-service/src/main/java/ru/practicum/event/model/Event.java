@@ -37,7 +37,7 @@ public class Event {
     private State state;
 
     @Embedded
-    private Location location;
+    private EventLocation location;
 
     @ManyToOne
     private Category category;

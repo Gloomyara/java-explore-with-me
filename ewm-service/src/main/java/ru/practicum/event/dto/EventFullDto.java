@@ -31,7 +31,7 @@ public class EventFullDto {
     private UserShortDto initiator;
     private CategoryDto category;
     private State state;
-    private LocationDto location;
+    private EventLocationDto location;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;

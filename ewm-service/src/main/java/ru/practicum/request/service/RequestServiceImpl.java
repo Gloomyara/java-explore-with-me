@@ -50,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto saveNewRequestPrivate(Long userId, Long eventId) {
         userExistsCheck(userId);
         eventExistsCheck(eventId);
-        requestExistsCheck(userId, eventId);
+        requestAlreadyExistsCheck(userId, eventId);
         userNotEventInitiatorCheck(userId, eventId);
         eventPublishedCheck(eventId);
         eventParticipationLimitCheck(eventId);
@@ -187,7 +187,7 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
-    private void requestExistsCheck(Long userId, Long eventId) {
+    private void requestAlreadyExistsCheck(Long userId, Long eventId) {
         if (requestRepository.existsByRequesterIdAndEventId(userId, eventId)) {
             throw new RequestConstraintException(
                     String.format("Error! Request userId:%d eventId:%d already exist.", userId, eventId));

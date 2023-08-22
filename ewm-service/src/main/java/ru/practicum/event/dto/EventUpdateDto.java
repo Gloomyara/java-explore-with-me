@@ -29,7 +29,7 @@ public abstract class EventUpdateDto implements EventDtoIn {
 
     @Size(min = 20, max = 7000)
     protected String description;
-    protected LocationDto location;
+    protected EventLocationDto location;
     protected Boolean paid;
     protected Boolean requestModeration;
     @PositiveOrZero

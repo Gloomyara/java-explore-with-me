@@ -1,0 +1,2214 @@
+{
+	"info": {
+		"_postman_id": "62d4c186-211f-4ea8-9d20-e30763ff4687",
+		"name": "feature",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23890044"
+	},
+	"item": [
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "Refresh DB",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"   pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/test",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 1 create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Локация должна содержать поля: id, name, lat, lon, radius\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('lat');\r",
+											"pm.expect(target).to.have.property('lon');\r",
+											"pm.expect(target).to.have.property('radius');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(source.name).equal(target.name, 'name должно соответствовать отправленному в запросе');\r",
+											"    pm.expect(source.lat).equal(target.lat, 'lat должна соответствовать отправленной в запросе');\r",
+											"    pm.expect(source.lon).equal(target.lon, 'lon должна соответствовать отправленной в запросе');\r",
+											"    pm.expect(source.radius).equal(target.radius, 'radius должен соответствовать отправленному в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Локация1\",\r\n  \"lat\": 1,\r\n  \"lon\": 1,\r\n  \"radius\": 150\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 2 create fail duplicate coordinates",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(409);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Локация2\",\r\n  \"lat\": 1,\r\n  \"lon\": 1,\r\n  \"radius\": 150\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 2 create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Локация должна содержать поля: id, name, lat, lon, radius\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('lat');\r",
+											"pm.expect(target).to.have.property('lon');\r",
+											"pm.expect(target).to.have.property('radius');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(source.name).equal(target.name, 'name должно соответствовать отправленному в запросе');\r",
+											"    pm.expect(source.lat).equal(target.lat, 'lat должна соответствовать отправленной в запросе');\r",
+											"    pm.expect(source.lon).equal(target.lon, 'lon должна соответствовать отправленной в запросе');\r",
+											"    pm.expect(source.radius).equal(target.radius, 'radius должен соответствовать отправленному в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Локация2\",\r\n  \"lat\": 2,\r\n  \"lon\": 2,\r\n  \"radius\": 150\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 3 create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Локация должна содержать поля: id, name, lat, lon, radius\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('lat');\r",
+											"pm.expect(target).to.have.property('lon');\r",
+											"pm.expect(target).to.have.property('radius');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(source.name).equal(target.name, 'name должно соответствовать отправленному в запросе');\r",
+											"    pm.expect(source.lat).equal(target.lat, 'lat должна соответствовать отправленной в запросе');\r",
+											"    pm.expect(source.lon).equal(target.lon, 'lon должна соответствовать отправленной в запросе');\r",
+											"    pm.expect(source.radius).equal(target.radius, 'radius должен соответствовать отправленному в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Локация3\",\r\n  \"lat\": 3,\r\n  \"lon\": 3,\r\n  \"radius\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 3 update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Локация должна содержать поля: id, name, lat, lon, radius\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('lat');\r",
+											"pm.expect(target).to.have.property('lon');\r",
+											"pm.expect(target).to.have.property('radius');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"radius\": 150\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations/:latId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations",
+										":latId"
+									],
+									"variable": [
+										{
+											"key": "latId",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 2 get",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Локация должна содержать поля: id, name, lat, lon, radius\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('lat');\r",
+											"pm.expect(target).to.have.property('lon');\r",
+											"pm.expect(target).to.have.property('radius');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations/:latId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations",
+										":latId"
+									],
+									"variable": [
+										{
+											"key": "latId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 99 get unknown",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {\r",
+											"   pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations/:latId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations",
+										":latId"
+									],
+									"variable": [
+										{
+											"key": "latId",
+											"value": "99"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location get all",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Должны быть найдены 3 локации по заданному фильтру\", function () {\r",
+											"    pm.expect(target.length).to.eql(3);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/locations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"locations"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "public",
+					"item": [
+						{
+							"name": "Location 2 get",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Локация должна содержать поля: id, name, lat, lon, radius\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('lat');\r",
+											"pm.expect(target).to.have.property('lon');\r",
+											"pm.expect(target).to.have.property('radius');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:latId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":latId"
+									],
+									"variable": [
+										{
+											"key": "latId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location 99 get unknown",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {\r",
+											"   pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:latId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":latId"
+									],
+									"variable": [
+										{
+											"key": "latId",
+											"value": "99"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location get all",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Должны быть найдены только 3 локации по заданному фильтру\", function () {\r",
+											"    pm.expect(target.length).to.eql(3);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/locations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations"
+									],
+									"query": [
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Event",
+			"item": [
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "Category 1 create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Категория должна содержать поля: id, name\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(source.name).equal(target.name, 'Название категории должно совпадать с отправленным');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Концерты\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/categories",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User 1 create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Пользователь должен содержать поля: id, name, email\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('name');\r",
+											"pm.expect(target).to.have.property('email');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(source.name).equal(target.name, 'Имя пользователя должно соответствовать отправленному в запросе');\r",
+											"    pm.expect(source.email).equal(target.email, 'Почта пользователя должна соответствовать отправленной в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"ivan.petrov@practicummail.ru\",\r\n  \"name\": \"Иван Петров\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event  1 create on location 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(target.title).equal(source.title, 'Название события должно соответствовать названию события в запросе');\r",
+											"    pm.expect(target.annotation).equal(source.annotation, 'Аннотация события должна соответствовать аннотации события в запросе');\r",
+											"    pm.expect(target.paid.toString()).equal(source.paid.toString(), 'Стоимость события должна соответствовать стоимости события в запросе');\r",
+											"    pm.expect(target.eventDate).equal(source.eventDate, 'Дата проведения события должна соответствовать дате проведения события в запросе');\r",
+											"    pm.expect(target.description).equal(source.description, 'Описание события должно соответствовать описание события в запросе');\r",
+											"    pm.expect(target.participantLimit.toString()).equal(source.participantLimit.toString(), 'Лимит участников события должно соответствовать лимиту участников события в запросе');\r",
+											"    pm.expect(target.location.lat.toString()).equal(source.location.lat.toString(), 'Широта локации проведения события должна соответствовать широте локации проведения события в запросе');\r",
+											"    pm.expect(target.location.lon.toString()).equal(source.location.lon.toString(), 'Долгота локации проведения события должна соответствовать долготе локации проведения события в запросе');\r",
+											"    pm.expect(target.requestModeration.toString()).equal(source.requestModeration.toString(), 'Необходимость модерации события должна соответствовать необходимости модерации события в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"annotation\": \"Аннотация1.Аннотация1.Аннотация1.Аннотация1.\",\r\n  \"category\": 1,\r\n  \"description\": \"Описание1.Описание1.\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 1,\r\n    \"lon\": 1\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"events"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event  2 create on location between 1 & 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(target.title).equal(source.title, 'Название события должно соответствовать названию события в запросе');\r",
+											"    pm.expect(target.annotation).equal(source.annotation, 'Аннотация события должна соответствовать аннотации события в запросе');\r",
+											"    pm.expect(target.paid.toString()).equal(source.paid.toString(), 'Стоимость события должна соответствовать стоимости события в запросе');\r",
+											"    pm.expect(target.eventDate).equal(source.eventDate, 'Дата проведения события должна соответствовать дате проведения события в запросе');\r",
+											"    pm.expect(target.description).equal(source.description, 'Описание события должно соответствовать описание события в запросе');\r",
+											"    pm.expect(target.participantLimit.toString()).equal(source.participantLimit.toString(), 'Лимит участников события должно соответствовать лимиту участников события в запросе');\r",
+											"    pm.expect(target.location.lat.toString()).equal(source.location.lat.toString(), 'Широта локации проведения события должна соответствовать широте локации проведения события в запросе');\r",
+											"    pm.expect(target.location.lon.toString()).equal(source.location.lon.toString(), 'Долгота локации проведения события должна соответствовать долготе локации проведения события в запросе');\r",
+											"    pm.expect(target.requestModeration.toString()).equal(source.requestModeration.toString(), 'Необходимость модерации события должна соответствовать необходимости модерации события в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"annotation\": \"Аннотация2.Аннотация2.Аннотация2.Аннотация2.\",\r\n  \"category\": 1,\r\n  \"description\": \"Описание2.Описание2.\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 1.5,\r\n    \"lon\": 1.5\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"events"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event 3 create on location 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(target.title).equal(source.title, 'Название события должно соответствовать названию события в запросе');\r",
+											"    pm.expect(target.annotation).equal(source.annotation, 'Аннотация события должна соответствовать аннотации события в запросе');\r",
+											"    pm.expect(target.paid.toString()).equal(source.paid.toString(), 'Стоимость события должна соответствовать стоимости события в запросе');\r",
+											"    pm.expect(target.eventDate).equal(source.eventDate, 'Дата проведения события должна соответствовать дате проведения события в запросе');\r",
+											"    pm.expect(target.description).equal(source.description, 'Описание события должно соответствовать описание события в запросе');\r",
+											"    pm.expect(target.participantLimit.toString()).equal(source.participantLimit.toString(), 'Лимит участников события должно соответствовать лимиту участников события в запросе');\r",
+											"    pm.expect(target.location.lat.toString()).equal(source.location.lat.toString(), 'Широта локации проведения события должна соответствовать широте локации проведения события в запросе');\r",
+											"    pm.expect(target.location.lon.toString()).equal(source.location.lon.toString(), 'Долгота локации проведения события должна соответствовать долготе локации проведения события в запросе');\r",
+											"    pm.expect(target.requestModeration.toString()).equal(source.requestModeration.toString(), 'Необходимость модерации события должна соответствовать необходимости модерации события в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"annotation\": \"Аннотация3.Аннотация3.Аннотация3.Аннотация3.\",\r\n  \"category\": 1,\r\n  \"description\": \"Описание3.Описание3.\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 3,\r\n    \"lon\": 3\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"events"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event 4 create on unknown location",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+											"    pm.expect(target.id).to.not.be.null;\r",
+											"    pm.expect(target.title).equal(source.title, 'Название события должно соответствовать названию события в запросе');\r",
+											"    pm.expect(target.annotation).equal(source.annotation, 'Аннотация события должна соответствовать аннотации события в запросе');\r",
+											"    pm.expect(target.paid.toString()).equal(source.paid.toString(), 'Стоимость события должна соответствовать стоимости события в запросе');\r",
+											"    pm.expect(target.eventDate).equal(source.eventDate, 'Дата проведения события должна соответствовать дате проведения события в запросе');\r",
+											"    pm.expect(target.description).equal(source.description, 'Описание события должно соответствовать описание события в запросе');\r",
+											"    pm.expect(target.participantLimit.toString()).equal(source.participantLimit.toString(), 'Лимит участников события должно соответствовать лимиту участников события в запросе');\r",
+											"    pm.expect(target.location.lat.toString()).equal(source.location.lat.toString(), 'Широта локации проведения события должна соответствовать широте локации проведения события в запросе');\r",
+											"    pm.expect(target.location.lon.toString()).equal(source.location.lon.toString(), 'Долгота локации проведения события должна соответствовать долготе локации проведения события в запросе');\r",
+											"    pm.expect(target.requestModeration.toString()).equal(source.requestModeration.toString(), 'Необходимость модерации события должна соответствовать необходимости модерации события в запросе');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"annotation\": \"Аннотация4.Аннотация4.Аннотация4.Аннотация4.\",\r\n  \"category\": 1,\r\n  \"description\": \"Описание4.Описание24\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55,\r\n    \"lon\": 55\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"events"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by location 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/events?locations=1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events"
+									],
+									"query": [
+										{
+											"key": "users",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "states",
+											"value": "PENDING",
+											"description": "PENDING, PUBLISHED, CANCELED",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "1",
+											"description": "ids"
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by location 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/events?locations=2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events"
+									],
+									"query": [
+										{
+											"key": "users",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "states",
+											"value": "PENDING",
+											"description": "PENDING, PUBLISHED, CANCELED",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "2",
+											"description": "ids"
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by location 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/events?locations=3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events"
+									],
+									"query": [
+										{
+											"key": "users",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "states",
+											"value": "PENDING",
+											"description": "PENDING, PUBLISHED, CANCELED",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "3",
+											"description": "ids"
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by locations 1,2,3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 3').to.eql(3);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/events?locations=1,2,3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events"
+									],
+									"query": [
+										{
+											"key": "users",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "states",
+											"value": "PENDING",
+											"description": "PENDING, PUBLISHED, CANCELED",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "1,2,3",
+											"description": "ids"
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 4').to.eql(4);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events"
+									],
+									"query": [
+										{
+											"key": "users",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "states",
+											"value": "PENDING",
+											"description": "PENDING, PUBLISHED, CANCELED",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "3",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event 1 publish",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(200);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/events/:eventId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event 2 publish",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(200);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/events/:eventId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event 3 publish",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(200);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/events/:eventId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event 4 publish",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(200);  \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const target = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"pm.expect(target).to.have.property('id');\r",
+											"pm.expect(target).to.have.property('title');\r",
+											"pm.expect(target).to.have.property('annotation');\r",
+											"pm.expect(target).to.have.property('category');\r",
+											"pm.expect(target).to.have.property('paid');\r",
+											"pm.expect(target).to.have.property('eventDate');\r",
+											"pm.expect(target).to.have.property('initiator');\r",
+											"pm.expect(target).to.have.property('description');\r",
+											"pm.expect(target).to.have.property('participantLimit');\r",
+											"pm.expect(target).to.have.property('state');\r",
+											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('location');\r",
+											"pm.expect(target).to.have.property('requestModeration');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/events/:eventId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"events",
+										":eventId"
+									],
+									"variable": [
+										{
+											"key": "eventId",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "public",
+					"item": [
+						{
+							"name": "Event get all by location 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/events?locations=1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "Сплав",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "1"
+										},
+										{
+											"key": "paid",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "onlyAvailable",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "EVENT_DATE",
+											"description": "EVENT_DATE, VIEWS",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by location 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Test event[0] 'id' field\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData[0]).to.have.property('id');\r",
+											"    pm.expect(jsonData[0].id, '\"id\" must be 2').to.eql(2);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/events?locations=2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "Сплав",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "2"
+										},
+										{
+											"key": "paid",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "onlyAvailable",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "EVENT_DATE",
+											"description": "EVENT_DATE, VIEWS",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by location 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Test event[0] 'id' field\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData[0]).to.have.property('id');\r",
+											"    pm.expect(jsonData[0].id, '\"id\" must be 3').to.eql(3);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/events?locations=3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "Сплав",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "3"
+										},
+										{
+											"key": "paid",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "onlyAvailable",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "EVENT_DATE",
+											"description": "EVENT_DATE, VIEWS",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all by location 1,2,3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 3').to.eql(3);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/events?locations=1,2,3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "Сплав",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "1,2,3"
+										},
+										{
+											"key": "paid",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "onlyAvailable",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "EVENT_DATE",
+											"description": "EVENT_DATE, VIEWS",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Event get all",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.length, 'List length must be 4').to.eql(4);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/events",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "Сплав",
+											"disabled": true
+										},
+										{
+											"key": "categories",
+											"value": "1,2,3,4",
+											"description": "ids",
+											"disabled": true
+										},
+										{
+											"key": "locations",
+											"value": "1,2,3",
+											"disabled": true
+										},
+										{
+											"key": "paid",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "rangeStart",
+											"value": "2020-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "rangeEnd",
+											"value": "2030-01-01 00:00:00",
+											"disabled": true
+										},
+										{
+											"key": "onlyAvailable",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "EVENT_DATE",
+											"description": "EVENT_DATE, VIEWS",
+											"disabled": true
+										},
+										{
+											"key": "from",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "100",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "default"
+		}
+	]
+}
