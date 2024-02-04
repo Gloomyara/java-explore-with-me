@@ -23,7 +23,7 @@
 ## Сборка
 1. Клонируйте репозиторий:
 ```Bash
-git clone https://github.com/OrlovDeniss/java-explore-with-me.git
+git clone https://github.com/Gloomyara/java-explore-with-me.git
 ```
 2. Перейдите в каталог проекта: 
 ```Bash
