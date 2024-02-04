@@ -1,19 +1,41 @@
-   # java-explore-with-me
-   Template repository for ExploreWithMe project.
+# Explore with me
+Планировщик мероприятий, который позволяет пользователям создавать, искать и участвовать в различных событиях.
 
-   ## **Final**
+## Стек
+- Java 11
+- Maven 4
+- Spring Boot 2
+- Spring Data
+- PostgreSQl
+- MapStruct
+- Lombok
+- Docker
 
-   ### [Feature pull request](https://github.com/Gloomyara/java-explore-with-me/pull/5)
+## API
+1) Service URL: http://localhost:8080 
 
-<details>
-<summary> Location processing </summary>
+    [Спецификация Swagger](https://app.swaggerhub.com/apis/ORLOVDENISM/explore-with-me/1.0.0)
 
-   ### **Администрирование локаций** ###
+2) Statistic URL: http://localhost:9090
 
-   ### Короткое описание фичи: ###
-   
-   - Добавлена возможность для администратора добавлять конкретные локации(города, театры, концертные залы и другие) в виде координат (широта, долгота, радиус). 
-   - Получение списка этих локаций. 
-   - Возможность поиска событий в конкретной локации.
+    [Спецификация Swagger](https://app.swaggerhub.com/apis/ORLOVDENISM/java-explore-with-me/1.0.0)
 
-</details>
+## Сборка
+1. Клонируйте репозиторий:
+```Bash
+git clone https://github.com/OrlovDeniss/java-explore-with-me.git
+```
+2. Перейдите в каталог проекта: 
+```Bash
+cd java-explore-with-me
+```
+3. Скомпилируйте исходные файлы:
+```Bash
+mvn clean package
+```
+4. Запустите проект:
+```Bash
+docker-compose up
+```
+## Статус проекта
+Завершен.
